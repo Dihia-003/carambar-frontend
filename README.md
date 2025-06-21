@@ -57,7 +57,7 @@ Landing page moderne et interactive pour l'application de blagues de Carambar & 
 Pour changer l'URL de l'API, modifiez la constante dans `script.js` :
 
 ```javascript
-const API_BASE_URL = 'https://votre-api-render.com/api/v1';
+const API_BASE_URL = 'https://votre-api-render.com/api';
 ```
 
 ### Personnalisation
@@ -129,7 +129,7 @@ L'application se connecte à l'API Carambar pour :
 - Afficher les états de chargement
 
 ### Endpoints utilisés
-- `GET /api/v1/blagues/random` - Blague aléatoire
+- `GET /api/blagues/random` - Blague aléatoire
 
 ## 🧪 Tests
 
