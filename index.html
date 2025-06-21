@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🍬 Carambar & Co - Blagues</title>
+    <meta name="description" content="Découvrez les meilleures blagues de Carambar & Co ! Cliquez pour une blague aléatoire.">
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One:wght@400&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍬</text></svg>">
+</head>
+<body>
+    <!-- Le conteneur principal qui centre tout le contenu. -->
+    <div class="container">
+        
+        <!-- ======================= HEADER ======================= -->
+        <!-- L'en-tête de la page avec le logo et le slogan. -->
+        <header class="header">
+            <div class="logo">
+                <span class="logo-icon">🍬</span>
+                <h1 class="logo-text">Carambar & Co</h1>
+            </div>
+            <p class="tagline">Les blagues qui font rire depuis 1954 !</p>
+        </header>
+
+        <!-- ======================= CONTENU PRINCIPAL ======================= -->
+        <main class="main-content">
+            
+            <!-- SECTION D'ACCUEIL (Hero Section) -->
+            <!-- C'est la première chose que l'utilisateur voit. Elle est visible par défaut. -->
+            <div class="hero-section">
+                <div class="hero-content">
+                    <h2 class="hero-title">Bienvenue dans l'univers des blagues Carambar !</h2>
+                    <p class="hero-description">
+                        Découvrez notre collection de blagues hilarantes. 
+                        Chaque clic vous réserve une surprise !
+                    </p>
+                    
+                    <!-- Le bouton principal qui va déclencher la première recherche de blague. -->
+                    <button id="jokeButton" class="joke-button">
+                        <span class="button-icon">🎭</span>
+                        <span class="button-text">Raconte-moi une blague !</span>
+                    </button>
+                </div>
+                
+                <div class="hero-image">
+                    <div class="carambar-wrapper">
+                        <div class="carambar-bonbon">🍬</div>
+                        <div class="carambar-bonbon">🍬</div>
+                        <div class="carambar-bonbon">🍬</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ======================= CONTENEURS D'ÉTAT ======================= -->
+            <!-- Les 3 conteneurs suivants représentent les différents états de l'application. -->
+            <!-- Un seul d'entre eux est visible à la fois (géré par JavaScript avec la classe 'hidden'). -->
+
+            <!-- 1. CONTENEUR D'AFFICHAGE DE LA BLAGUE -->
+            <!-- Cet élément est caché par défaut ('hidden') et ne s'affiche que lorsqu'on a une blague. -->
+            <div id="jokeContainer" class="joke-container hidden">
+                <div class="joke-card">
+                    <div class="joke-header">
+                        <span class="joke-icon">😄</span>
+                        <h3 class="joke-title">Votre blague du jour</h3>
+                    </div>
+                    <div class="joke-content">
+                        <!-- Le texte de la blague sera inséré ici par JavaScript. -->
+                        <p id="jokeText" class="joke-text">Cliquez sur le bouton pour découvrir une blague !</p>
+                        <!-- L'auteur de la blague sera inséré ici. -->
+                        <p id="jokeAuthor" class="joke-author"></p>
+                    </div>
+                    <div class="joke-footer">
+                        <!-- Le bouton pour demander une nouvelle blague. -->
+                        <button id="newJokeButton" class="new-joke-button">
+                            <span class="button-icon">🔄</span>
+                            <span class="button-text">Une autre blague !</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. CONTENEUR DE CHARGEMENT (Loading State) -->
+            <!-- Cet élément est visible uniquement pendant que l'on attend la réponse de l'API. -->
+            <div id="loadingContainer" class="loading-container hidden">
+                <div class="loading-spinner"></div>
+                <p class="loading-text">Chargement de votre blague...</p>
+            </div>
+
+            <!-- 3. CONTENEUR D'ERREUR (Error State) -->
+            <!-- Cet élément s'affiche si la requête à l'API échoue. -->
+            <div id="errorContainer" class="error-container hidden">
+                <div class="error-card">
+                    <span class="error-icon">😅</span>
+                    <h3 class="error-title">Oups !</h3>
+                    <!-- Le message d'erreur sera inséré ici par JavaScript. -->
+                    <p id="errorText" class="error-text">Une erreur s'est produite.</p>
+                    <!-- Le bouton pour relancer la requête en cas d'erreur. -->
+                    <button id="retryButton" class="retry-button">
+                        <span class="button-icon">🔄</span>
+                        <span class="button-text">Réessayer</span>
+                    </button>
+                </div>
+            </div>
+        </main>
+
+        <!-- ======================= FOOTER ======================= -->
+        <footer class="footer">
+            <div class="footer-content">
+                <p class="footer-text">
+                    © 2024 Carambar & Co - Tous droits réservés
+                </p>
+                <div class="footer-links">
+                    <a href="#" class="footer-link">À propos</a>
+                    <a href="#" class="footer-link">Contact</a>
+                    <a href="#" class="footer-link">Mentions légales</a>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Conteneur pour l'effet des confettis. Il est en dehors du flux normal. -->
+    <div id="confettiContainer" class="confetti-container"></div>
+
+    <!-- On charge notre fichier JavaScript à la toute fin du body. -->
+    <!-- C'est la meilleure pratique pour s'assurer que tout le HTML est disponible quand le script s'exécute. -->
+    <script src="script.js"></script>
+</body>
+</html> 
