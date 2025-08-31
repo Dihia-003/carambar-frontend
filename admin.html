@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🍬 Admin - Carambar & Co</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .admin-container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .login-section {
+            text-align: center;
+            padding: 40px;
+        }
+        
+        .admin-section {
+            display: none;
+            padding: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+        
+        .form-group textarea {
+            height: 120px;
+            resize: vertical;
+        }
+        
+        .admin-button {
+            background: #FF6B35;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .admin-button:hover {
+            background: #e55a2b;
+            transform: translateY(-2px);
+        }
+        
+        .success-message {
+            background: #4CAF50;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            display: none;
+        }
+        
+        .error-message {
+            background: #f44336;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="logo">
+                <span class="logo-icon">🍬</span>
+                <h1 class="logo-text">Carambar & Co - Admin</h1>
+            </div>
+            <p class="tagline">Gestion des blagues</p>
+        </header>
+
+        <div class="admin-container">
+            <!-- Section de connexion -->
+            <div id="loginSection" class="login-section">
+                <h2>🔐 Connexion Admin</h2>
+                <p>Entrez le mot de passe pour accéder à l'administration</p>
+                
+                <div class="form-group">
+                    <input type="password" id="adminPassword" placeholder="Mot de passe admin" />
+                </div>
+                
+                <button class="admin-button" onclick="login()">Se connecter</button>
+                
+                <div id="loginError" class="error-message">
+                    Mot de passe incorrect !
+                </div>
+            </div>
+
+            <!-- Section d'administration -->
+            <div id="adminSection" class="admin-section">
+                <h2>📝 Gestion des blagues</h2>
+                
+                <!-- Formulaire d'ajout de blague -->
+                <form id="blagueForm" onsubmit="addBlague(event)">
+                    <div class="form-group">
+                        <label for="contenu">Contenu de la blague :</label>
+                        <textarea id="contenu" placeholder="Entrez le contenu de la blague..." required></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="auteur">Auteur (optionnel) :</label>
+                        <input type="text" id="auteur" placeholder="Nom de l'auteur" />
+                    </div>
+                    
+                    <button type="submit" class="admin-button">➕ Ajouter la blague</button>
+                </form>
+                
+                <!-- Messages de succès/erreur -->
+                <div id="successMessage" class="success-message">
+                    Blague ajoutée avec succès ! 🎉
+                </div>
+                
+                <div id="errorMessage" class="error-message">
+                    Erreur lors de l'ajout de la blague.
+                </div>
+                
+                <!-- Bouton de déconnexion -->
+                <div style="margin-top: 30px; text-align: center;">
+                    <button class="admin-button" onclick="logout()" style="background: #666;">
+                        🚪 Se déconnecter
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="admin.js"></script>
+</body>
+</html>
