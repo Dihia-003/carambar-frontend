@@ -2,7 +2,7 @@
 // On définit l'URL de base de notre API pour ne pas avoir à la répéter partout.
 const API_BASE_URL = 'https://carambar-api-lndl.onrender.com';
 // On construit l'URL spécifique pour récupérer une blague aléatoire.
-const API_RANDOM_JOKE_URL = `${API_BASE_URL}/blague`;
+const API_RANDOM_JOKE_URL = `${API_BASE_URL}/api/blagues/random`;
 
 // --- Sélection des Éléments du DOM ---
 // On récupère toutes les parties de notre page HTML avec lesquelles on veut interagir.
