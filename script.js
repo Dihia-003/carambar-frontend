@@ -1,8 +1,8 @@
 // --- Configuration Globale ---
 // On définit l'URL de base de notre API pour ne pas avoir à la répéter partout.
-const API_BASE_URL = 'http://localhost:3001/api';
+const API_BASE_URL = 'https://carambar-api-lndl.onrender.com';
 // On construit l'URL spécifique pour récupérer une blague aléatoire.
-const API_RANDOM_JOKE_URL = `${API_BASE_URL}/blagues/random`;
+const API_RANDOM_JOKE_URL = `${API_BASE_URL}/blague`;
 
 // --- Sélection des Éléments du DOM ---
 // On récupère toutes les parties de notre page HTML avec lesquelles on veut interagir.
