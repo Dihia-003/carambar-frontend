@@ -8,6 +8,7 @@ const adminSection = document.getElementById('adminSection');
 const loginError = document.getElementById('loginError');
 const successMessage = document.getElementById('successMessage');
 const errorMessage = document.getElementById('errorMessage');
+const jokesList = document.getElementById('jokesList');
 
 // --- Fonction de connexion (très simple) ---
 function login() {
@@ -24,6 +25,9 @@ function login() {
         sessionStorage.setItem('isAdmin', 'true');
         
         console.log('✅ Connexion admin réussie');
+
+        // Charger la liste des blagues
+        loadJokes();
     } else {
         // Mot de passe incorrect
         loginError.style.display = 'block';
@@ -88,6 +92,9 @@ async function addBlague(event) {
             
             // Nettoyage du formulaire
             document.getElementById('blagueForm').reset();
+
+            // Recharger la liste
+            loadJokes();
             
         } else {
             // Erreur de l'API
@@ -143,3 +150,55 @@ document.addEventListener('keydown', (event) => {
         login();
     }
 });
+
+// --- Chargement simple de toutes les blagues ---
+async function loadJokes() {
+    if (!jokesList) return;
+    jokesList.innerHTML = 'Chargement...';
+    try {
+        const res = await fetch(`${API_BASE_URL}/api/blagues`);
+        if (!res.ok) throw new Error('Erreur lors du chargement');
+        const data = await res.json();
+        const items = (data.data || []);
+        if (items.length === 0) {
+            jokesList.innerHTML = '<em>Aucune blague pour le moment.</em>';
+            return;
+        }
+        jokesList.innerHTML = items.map(j => `
+            <div style="border:1px solid #eee; border-radius:8px; padding:10px; display:flex; justify-content:space-between; gap:10px;">
+                <div>
+                    <div style="font-weight:700;">#${j.id}</div>
+                    <div>${escapeHtml(j.contenu)}</div>
+                    <div style="font-size:.9rem; color:#888;">Par ${escapeHtml(j.auteur || 'Anonyme')}</div>
+                </div>
+                <button class="admin-button" style="background:#e74c3c;" onclick="deleteJoke(${j.id})">Supprimer</button>
+            </div>
+        `).join('');
+    } catch (e) {
+        console.error(e);
+        jokesList.innerHTML = '<span style="color:#e74c3c;">Erreur de chargement.</span>';
+    }
+}
+
+// --- Suppression d'une blague ---
+async function deleteJoke(id) {
+    if (!confirm('Supprimer cette blague ?')) return;
+    try {
+        const res = await fetch(`${API_BASE_URL}/api/blagues/${id}`, { method: 'DELETE' });
+        if (!res.ok) throw new Error('Suppression impossible');
+        loadJokes();
+    } catch (e) {
+        console.error(e);
+        alert('Erreur pendant la suppression');
+    }
+}
+
+// --- Sécurité minimale pour l'affichage ---
+function escapeHtml(str) {
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+}
