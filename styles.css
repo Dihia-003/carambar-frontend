@@ -71,6 +71,30 @@ body {
 }
 
 /* Bouton Admin en haut à droite */
+.top-links {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    display: flex;
+    gap: 10px;
+}
+
+.top-link {
+    background: var(--white);
+    color: var(--text-dark);
+    text-decoration: none;
+    padding: 10px 16px;
+    border-radius: 999px;
+    font-weight: 700;
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+}
+
+.top-link:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-hover);
+}
+
 .admin-top-link {
     position: absolute;
     top: 20px;

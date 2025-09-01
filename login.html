@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔑 Connexion - Carambar & Co</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .login-card{max-width:480px;margin:60px auto;background:#fff;border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,.1);padding:24px}
+        .login-card h2{text-align:center;margin-bottom:10px}
+        .login-card form{display:grid;gap:12px}
+        .login-card input{padding:12px;border:2px solid #eee;border-radius:12px;font-size:1rem}
+        .login-btn{background:#FF6B35;color:#fff;border:none;padding:12px 16px;border-radius:12px;font-weight:700;cursor:pointer}
+        .switch{font-size:.9rem;text-align:center;margin-top:6px}
+        .msg{margin-top:8px;text-align:center;font-weight:700}
+    </style>
+    <script>
+        const API_BASE_URL = 'https://carambar-api-lndl.onrender.com';
+        async function handleAuth(e){
+            e.preventDefault();
+            const isRegister = document.getElementById('mode').value === 'register';
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value.trim();
+            const endpoint = isRegister ? '/api/auth/register' : '/api/auth/login';
+            const res = await fetch(API_BASE_URL + endpoint,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,password})});
+            const data = await res.json().catch(()=>({}));
+            const msg = document.getElementById('msg');
+            if(!res.ok){ msg.style.color='#e74c3c'; msg.textContent=data.message||'Erreur'; return; }
+            if(!isRegister){ localStorage.setItem('token', data.token); msg.style.color='#2ecc71'; msg.textContent='Connecté !'; setTimeout(()=>location.href='index.html',800); }
+            else { msg.style.color='#2ecc71'; msg.textContent='Inscription réussie, connectez-vous.'; toggleMode(); }
+        }
+        function toggleMode(){
+            const mode = document.getElementById('mode');
+            const title = document.getElementById('title');
+            const submit = document.getElementById('submit');
+            const switchText = document.getElementById('switch-text');
+            const isRegister = mode.value === 'register';
+            if(isRegister){ mode.value='login'; title.textContent='Connexion'; submit.textContent='Se connecter'; switchText.innerHTML="Pas de compte ? <a href='#' onclick='toggleMode()'>Créer un compte</a>"; }
+            else { mode.value='register'; title.textContent='Inscription'; submit.textContent="S'inscrire"; switchText.innerHTML="Déjà un compte ? <a href='#' onclick='toggleMode()'>Se connecter</a>"; }
+            document.getElementById('msg').textContent='';
+        }
+        document.addEventListener('DOMContentLoaded',()=>{ toggleMode(); });
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="logo"><span class="logo-icon">🍬</span><h1 class="logo-text">Carambar & Co</h1></div>
+            <p class="tagline">Connexion / Inscription</p>
+        </header>
+        <div class="login-card">
+            <h2 id="title">Connexion</h2>
+            <form onsubmit="handleAuth(event)">
+                <input id="email" type="email" placeholder="Email" required>
+                <input id="password" type="password" placeholder="Mot de passe (8+ avec chiffre)" required>
+                <input id="mode" type="hidden" value="register">
+                <button id="submit" class="login-btn" type="submit">Se connecter</button>
+                <div id="switch-text" class="switch"></div>
+                <div id="msg" class="msg"></div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
+
+
