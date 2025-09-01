@@ -54,6 +54,9 @@ document.addEventListener('DOMContentLoaded', () => {
         showToast('Bienvenue, vous êtes connecté !');
         history.replaceState({}, '', 'index.html');
     }
+
+    // Gestion de l'affichage du formulaire selon l'état de connexion
+    updateSubmitFormVisibility();
 });
 
 // --- Fonctions Principales ---
@@ -121,6 +124,38 @@ function showToast(message) {
     toast.style.zIndex = '2000';
     document.body.appendChild(toast);
     setTimeout(() => toast.remove(), 2500);
+}
+
+// --- Gestion de l'affichage du formulaire selon la connexion ---
+function updateSubmitFormVisibility() {
+    const submitSection = document.getElementById('submitSection');
+    if (!submitSection) return;
+    
+    const token = localStorage.getItem('token');
+    if (token) {
+        // Utilisateur connecté: afficher le formulaire normal
+        submitSection.innerHTML = `
+            <h3 class="submit-title">Proposez votre blague</h3>
+            <form id="userJokeForm" class="submit-form">
+                <textarea id="userJokeContent" class="submit-textarea" placeholder="Votre blague..." required></textarea>
+                <input id="userJokeAuthor" class="submit-input" type="text" placeholder="Votre nom (optionnel)" />
+                <button type="submit" class="new-joke-button">Envoyer ma blague</button>
+                <p id="userJokeFeedback" class="feedback hidden"></p>
+            </form>
+        `;
+        // Réattacher l'événement
+        const form = document.getElementById('userJokeForm');
+        if (form) form.addEventListener('submit', submitUserJoke);
+    } else {
+        // Utilisateur non connecté: message d'invitation
+        submitSection.innerHTML = `
+            <h3 class="submit-title">Proposez votre blague</h3>
+            <div style="text-align:center; padding:20px;">
+                <p style="margin-bottom:15px;">Connectez-vous pour proposer vos propres blagues !</p>
+                <a href="login.html" class="new-joke-button" style="text-decoration:none; display:inline-block;">🔑 Se connecter</a>
+            </div>
+        `;
+    }
 }
 
 // --- Soumission d'une blague par un utilisateur ---
