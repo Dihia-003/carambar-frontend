@@ -40,6 +40,7 @@ body {
     text-align: center;
     padding: 40px 0;
     animation: fadeInDown 1s ease-out;
+    position: relative; /* nécessaire pour positionner le bouton admin en haut à droite */
 }
 
 .logo {
@@ -67,6 +68,26 @@ body {
     color: var(--white);
     opacity: 0.9;
     font-weight: 600;
+}
+
+/* Bouton Admin en haut à droite */
+.admin-top-link {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: var(--white);
+    color: var(--text-dark);
+    text-decoration: none;
+    padding: 10px 16px;
+    border-radius: 999px;
+    font-weight: 700;
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+}
+
+.admin-top-link:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-hover);
 }
 
 /* Main Content */
