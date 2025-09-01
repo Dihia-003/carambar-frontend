@@ -47,6 +47,13 @@ document.addEventListener('DOMContentLoaded', () => {
     if (userJokeForm) {
         userJokeForm.addEventListener('submit', submitUserJoke);
     }
+
+    // Message de bienvenue après connexion
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('connected') === '1') {
+        showToast('Bienvenue, vous êtes connecté !');
+        history.replaceState({}, '', 'index.html');
+    }
 });
 
 // --- Fonctions Principales ---
@@ -97,6 +104,23 @@ async function fetchRandomJoke() {
         // Le bloc 'finally' s'exécute toujours, que ça ait réussi ou échoué.
         setLoadingState(false); // On quitte l'état de chargement.
     }
+}
+
+// --- Mini toast utilisateur ---
+function showToast(message) {
+    const toast = document.createElement('div');
+    toast.textContent = message;
+    toast.style.position = 'fixed';
+    toast.style.bottom = '20px';
+    toast.style.right = '20px';
+    toast.style.background = '#2ecc71';
+    toast.style.color = '#fff';
+    toast.style.padding = '12px 16px';
+    toast.style.borderRadius = '12px';
+    toast.style.boxShadow = '0 8px 24px rgba(0,0,0,.15)';
+    toast.style.zIndex = '2000';
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 2500);
 }
 
 // --- Soumission d'une blague par un utilisateur ---

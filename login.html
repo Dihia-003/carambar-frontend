@@ -26,7 +26,7 @@
             const data = await res.json().catch(()=>({}));
             const msg = document.getElementById('msg');
             if(!res.ok){ msg.style.color='#e74c3c'; msg.textContent=data.message||'Erreur'; return; }
-            if(!isRegister){ localStorage.setItem('token', data.token); msg.style.color='#2ecc71'; msg.textContent='Connecté !'; setTimeout(()=>location.href='index.html',800); }
+            if(!isRegister){ localStorage.setItem('token', data.token); msg.style.color='#2ecc71'; msg.textContent='Connecté !'; setTimeout(()=>location.href='index.html?connected=1',600); }
             else { msg.style.color='#2ecc71'; msg.textContent='Inscription réussie, connectez-vous.'; toggleMode(); }
         }
         function toggleMode(){
