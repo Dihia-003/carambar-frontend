@@ -3,6 +3,8 @@
 const API_BASE_URL = 'https://carambar-api-lndl.onrender.com';
 // On construit l'URL spécifique pour récupérer une blague aléatoire.
 const API_RANDOM_JOKE_URL = `${API_BASE_URL}/api/blagues/random`;
+// URL pour ajouter une blague
+const API_ADD_JOKE_URL = `${API_BASE_URL}/api/blagues`;
 
 // --- Sélection des Éléments du DOM ---
 // On récupère toutes les parties de notre page HTML avec lesquelles on veut interagir.
@@ -17,6 +19,11 @@ const jokeText = document.getElementById('jokeText'); // Le paragraphe pour le t
 const jokeAuthor = document.getElementById('jokeAuthor'); // Le paragraphe pour l'auteur
 const errorText = document.getElementById('errorText'); // Le paragraphe pour le message d'erreur
 const confettiContainer = document.getElementById('confettiContainer'); // Le conteneur pour les confettis
+// Elements de soumission utilisateur
+const userJokeForm = document.getElementById('userJokeForm');
+const userJokeContent = document.getElementById('userJokeContent');
+const userJokeAuthor = document.getElementById('userJokeAuthor');
+const userJokeFeedback = document.getElementById('userJokeFeedback');
 
 // --- État de l'Application ---
 // On utilise une variable pour savoir si une requête est déjà en cours.
@@ -35,6 +42,11 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // On lance une petite animation d'entrée pour le style.
     animateOnLoad();
+
+    // Formulaire d'ajout par un utilisateur
+    if (userJokeForm) {
+        userJokeForm.addEventListener('submit', submitUserJoke);
+    }
 });
 
 // --- Fonctions Principales ---
@@ -85,6 +97,40 @@ async function fetchRandomJoke() {
         // Le bloc 'finally' s'exécute toujours, que ça ait réussi ou échoué.
         setLoadingState(false); // On quitte l'état de chargement.
     }
+}
+
+// --- Soumission d'une blague par un utilisateur ---
+async function submitUserJoke(event) {
+    event.preventDefault();
+    const contenu = (userJokeContent?.value || '').trim();
+    const auteur = (userJokeAuthor?.value || '').trim();
+    if (!contenu) {
+        showUserFeedback('Veuillez écrire une blague avant d\'envoyer.', true);
+        return;
+    }
+    try {
+        const response = await fetch(API_ADD_JOKE_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ contenu, auteur: auteur || 'Anonyme' })
+        });
+        if (!response.ok) {
+            throw new Error(`Erreur HTTP: ${response.status}`);
+        }
+        userJokeForm.reset();
+        showUserFeedback('Merci ! Votre blague a été ajoutée.', false);
+    } catch (e) {
+        console.error(e);
+        showUserFeedback('Oups, impossible d\'ajouter la blague pour le moment.', true);
+    }
+}
+
+function showUserFeedback(message, isError) {
+    if (!userJokeFeedback) return;
+    userJokeFeedback.textContent = message;
+    userJokeFeedback.classList.remove('hidden');
+    userJokeFeedback.style.color = isError ? '#e74c3c' : '#2ecc71';
+    setTimeout(() => userJokeFeedback.classList.add('hidden'), 3000);
 }
 
 // --- Fonctions d'Affichage (UI - User Interface) ---
