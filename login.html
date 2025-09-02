@@ -16,8 +16,10 @@
         .remember-me{display:flex;align-items:center;gap:8px;margin:8px 0;font-size:.9rem}
         .remember-me input[type="checkbox"]{width:16px;height:16px;cursor:pointer}
     </style>
+    <script src="config.js"></script>
     <script>
-        const API_BASE_URL = 'https://carambar-api-lndl.onrender.com';
+        // Configuration importée depuis config.js
+        const API_BASE_URL = CONFIG.API_BASE_URL;
         async function handleAuth(e){
             e.preventDefault();
             const isRegister = document.getElementById('mode').value === 'register';
@@ -68,36 +70,7 @@
             document.getElementById('msg').textContent='';
         }
         // Initialisation du menu burger
-        function initBurgerMenu() {
-            const burgerMenu = document.getElementById('burgerMenu');
-            const mobileMenu = document.getElementById('mobileMenu');
-            const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
-            
-            if (!burgerMenu || !mobileMenu || !mobileMenuOverlay) return;
-            
-            // Toggle du menu
-            burgerMenu.addEventListener('click', () => {
-                burgerMenu.classList.toggle('active');
-                mobileMenu.classList.toggle('active');
-                mobileMenuOverlay.classList.toggle('active');
-            });
-            
-            // Fermer le menu en cliquant sur l'overlay
-            mobileMenuOverlay.addEventListener('click', () => {
-                burgerMenu.classList.remove('active');
-                mobileMenu.classList.remove('active');
-                mobileMenuOverlay.classList.remove('active');
-            });
-            
-            // Fermer le menu en cliquant sur un lien
-            mobileMenu.addEventListener('click', (e) => {
-                if (e.target.classList.contains('mobile-link')) {
-                    burgerMenu.classList.remove('active');
-                    mobileMenu.classList.remove('active');
-                    mobileMenuOverlay.classList.remove('active');
-                }
-            });
-        }
+        // Fonction initBurgerMenu déplacée dans config.js pour éviter les doublons
 
         document.addEventListener('DOMContentLoaded',()=>{ 
             toggleMode(); 

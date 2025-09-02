@@ -1,5 +1,6 @@
 // --- Configuration ---
-const API_BASE_URL = 'https://carambar-api-lndl.onrender.com';
+// Configuration importée depuis config.js
+const API_BASE_URL = CONFIG.API_BASE_URL;
 const ADMIN_PASSWORD = 'admin123'; // Mot de passe simple et fixe
 
 // --- Éléments du DOM ---
@@ -225,48 +226,7 @@ async function deleteJoke(id) {
 }
 
 // --- Gestion du menu burger ---
-function initBurgerMenu() {
-    const burgerMenu = document.getElementById('burgerMenu');
-    const mobileMenu = document.getElementById('mobileMenu');
-    const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
-    const mobileLogoutButton = document.getElementById('mobileLogoutButton');
-    
-    if (!burgerMenu || !mobileMenu || !mobileMenuOverlay) return;
-    
-    // Toggle du menu
-    burgerMenu.addEventListener('click', () => {
-        burgerMenu.classList.toggle('active');
-        mobileMenu.classList.toggle('active');
-        mobileMenuOverlay.classList.toggle('active');
-    });
-    
-    // Fermer le menu en cliquant sur l'overlay
-    mobileMenuOverlay.addEventListener('click', () => {
-        burgerMenu.classList.remove('active');
-        mobileMenu.classList.remove('active');
-        mobileMenuOverlay.classList.remove('active');
-    });
-    
-    // Fermer le menu en cliquant sur un lien
-    const mobileLinks = mobileMenu.querySelectorAll('.mobile-link');
-    mobileLinks.forEach(link => {
-        link.addEventListener('click', () => {
-            burgerMenu.classList.remove('active');
-            mobileMenu.classList.remove('active');
-            mobileMenuOverlay.classList.remove('active');
-        });
-    });
-    
-    // Gérer le bouton de déconnexion mobile
-    if (mobileLogoutButton) {
-        mobileLogoutButton.addEventListener('click', () => {
-            logout();
-            burgerMenu.classList.remove('active');
-            mobileMenu.classList.remove('active');
-            mobileMenuOverlay.classList.remove('active');
-        });
-    }
-}
+// Fonction initBurgerMenu déplacée dans config.js pour éviter les doublons
 
 // --- Sécurité minimale pour l'affichage ---
 function escapeHtml(str) {

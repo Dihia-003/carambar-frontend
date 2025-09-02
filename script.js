@@ -1,10 +1,8 @@
 // --- Configuration Globale ---
-// On définit l'URL de base de notre API pour ne pas avoir à la répéter partout.
-const API_BASE_URL = 'https://carambar-api-lndl.onrender.com';
-// On construit l'URL spécifique pour récupérer une blague aléatoire.
-const API_RANDOM_JOKE_URL = `${API_BASE_URL}/api/blagues/random`;
-// URL pour ajouter une blague
-const API_ADD_JOKE_URL = `${API_BASE_URL}/api/blagues`;
+// Configuration importée depuis config.js
+const API_BASE_URL = CONFIG.API_BASE_URL;
+const API_RANDOM_JOKE_URL = `${API_BASE_URL}${CONFIG.API_ENDPOINTS.RANDOM_JOKE}`;
+const API_ADD_JOKE_URL = `${API_BASE_URL}${CONFIG.API_ENDPOINTS.ADD_JOKE}`;
 
 // --- Sélection des Éléments du DOM ---
 // On récupère toutes les parties de notre page HTML avec lesquelles on veut interagir.
@@ -254,36 +252,7 @@ function logout() {
 }
 
 // --- Gestion du menu burger ---
-function initBurgerMenu() {
-    const burgerMenu = document.getElementById('burgerMenu');
-    const mobileMenu = document.getElementById('mobileMenu');
-    const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
-    
-    if (!burgerMenu || !mobileMenu || !mobileMenuOverlay) return;
-    
-    // Toggle du menu
-    burgerMenu.addEventListener('click', () => {
-        burgerMenu.classList.toggle('active');
-        mobileMenu.classList.toggle('active');
-        mobileMenuOverlay.classList.toggle('active');
-    });
-    
-    // Fermer le menu en cliquant sur l'overlay
-    mobileMenuOverlay.addEventListener('click', () => {
-        burgerMenu.classList.remove('active');
-        mobileMenu.classList.remove('active');
-        mobileMenuOverlay.classList.remove('active');
-    });
-    
-    // Fermer le menu en cliquant sur un lien ou bouton
-    mobileMenu.addEventListener('click', (e) => {
-        if (e.target.classList.contains('mobile-link') || e.target.classList.contains('logout-button')) {
-            burgerMenu.classList.remove('active');
-            mobileMenu.classList.remove('active');
-            mobileMenuOverlay.classList.remove('active');
-        }
-    });
-}
+// Fonction initBurgerMenu déplacée dans config.js pour éviter les doublons
 
 // --- Soumission d'une blague par un utilisateur ---
 async function submitUserJoke(event) {
