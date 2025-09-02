@@ -48,15 +48,23 @@ document.addEventListener('DOMContentLoaded', () => {
         userJokeForm.addEventListener('submit', submitUserJoke);
     }
 
-    // Message de bienvenue après connexion
+    // Nettoyage de l'URL après connexion (sans message de bienvenue)
     const params = new URLSearchParams(window.location.search);
     if (params.get('connected') === '1') {
-        showToast('Bienvenue, vous êtes connecté !');
         history.replaceState({}, '', 'index.html');
     }
 
     // Gestion de l'affichage du formulaire selon l'état de connexion
     updateSubmitFormVisibility();
+    
+    // Gestion de l'affichage de la section hero selon l'état de connexion
+    updateHeroSectionVisibility();
+    
+    // Gestion de l'affichage des boutons de connexion/déconnexion
+    updateHeaderButtons();
+    
+    // Initialisation du menu burger
+    initBurgerMenu();
 });
 
 // --- Fonctions Principales ---
@@ -131,7 +139,7 @@ function updateSubmitFormVisibility() {
     const submitSection = document.getElementById('submitSection');
     if (!submitSection) return;
     
-    const token = localStorage.getItem('token');
+    const token = getToken();
     if (token) {
         // Utilisateur connecté: afficher le formulaire normal
         submitSection.innerHTML = `
@@ -156,6 +164,125 @@ function updateSubmitFormVisibility() {
             </div>
         `;
     }
+}
+
+// --- Gestion de l'affichage de la section hero selon la connexion ---
+function updateHeroSectionVisibility() {
+    const heroSection = document.querySelector('.hero-section');
+    if (!heroSection) return;
+    
+    const token = getToken();
+    if (token) {
+        // Utilisateur connecté: cacher la section hero
+        heroSection.style.display = 'none';
+    } else {
+        // Utilisateur non connecté: afficher la section hero
+        heroSection.style.display = 'block';
+    }
+}
+
+// --- Fonction pour récupérer le token (localStorage ou sessionStorage) ---
+function getToken() {
+    return localStorage.getItem('token') || sessionStorage.getItem('token');
+}
+
+// --- Gestion de l'affichage des boutons du header selon la connexion ---
+function updateHeaderButtons() {
+    const topLinks = document.querySelector('.top-links');
+    const mobileMenu = document.getElementById('mobileMenu');
+    
+    const token = getToken();
+    
+    if (topLinks) {
+        if (token) {
+            // Utilisateur connecté: afficher bouton de déconnexion
+            topLinks.innerHTML = `
+                <button id="logoutButton" class="top-link logout-button">🚪 Se déconnecter</button>
+                <a class="top-link" href="admin.html">🔧 Administration</a>
+            `;
+            // Attacher l'événement de déconnexion
+            const logoutButton = document.getElementById('logoutButton');
+            if (logoutButton) {
+                logoutButton.addEventListener('click', logout);
+            }
+        } else {
+            // Utilisateur non connecté: afficher bouton de connexion
+            topLinks.innerHTML = `
+                <a class="top-link" href="login.html">🔑 Se connecter</a>
+                <a class="top-link" href="admin.html">🔧 Administration</a>
+            `;
+        }
+    }
+    
+    // Mettre à jour le menu mobile
+    if (mobileMenu) {
+        if (token) {
+            // Utilisateur connecté: afficher bouton de déconnexion mobile
+            mobileMenu.innerHTML = `
+                <a href="admin.html" class="mobile-link">🔧 Administration</a>
+                <button id="mobileLogoutButton" class="mobile-link logout-button">🚪 Se déconnecter</button>
+            `;
+            // Attacher l'événement de déconnexion mobile
+            const mobileLogoutButton = document.getElementById('mobileLogoutButton');
+            if (mobileLogoutButton) {
+                mobileLogoutButton.addEventListener('click', logout);
+            }
+        } else {
+            // Utilisateur non connecté: afficher bouton de connexion mobile
+            mobileMenu.innerHTML = `
+                <a href="login.html" class="mobile-link">🔑 Se connecter</a>
+                <a href="admin.html" class="mobile-link">🔧 Administration</a>
+            `;
+        }
+    }
+}
+
+// --- Fonction de déconnexion ---
+function logout() {
+    // Supprimer le token du localStorage et sessionStorage
+    localStorage.removeItem('token');
+    sessionStorage.removeItem('token');
+    localStorage.removeItem('rememberMe');
+    
+    // Mettre à jour l'interface
+    updateHeaderButtons();
+    updateSubmitFormVisibility();
+    updateHeroSectionVisibility();
+    
+    // Rediriger vers la page d'accueil
+    window.location.href = 'index.html';
+}
+
+// --- Gestion du menu burger ---
+function initBurgerMenu() {
+    const burgerMenu = document.getElementById('burgerMenu');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
+    
+    if (!burgerMenu || !mobileMenu || !mobileMenuOverlay) return;
+    
+    // Toggle du menu
+    burgerMenu.addEventListener('click', () => {
+        burgerMenu.classList.toggle('active');
+        mobileMenu.classList.toggle('active');
+        mobileMenuOverlay.classList.toggle('active');
+    });
+    
+    // Fermer le menu en cliquant sur l'overlay
+    mobileMenuOverlay.addEventListener('click', () => {
+        burgerMenu.classList.remove('active');
+        mobileMenu.classList.remove('active');
+        mobileMenuOverlay.classList.remove('active');
+    });
+    
+    // Fermer le menu en cliquant sur un lien ou bouton
+    mobileMenu.addEventListener('click', (e) => {
+        if (e.target.classList.contains('mobile-link') || e.target.classList.contains('logout-button')) {
+            burgerMenu.classList.remove('active');
+            mobileMenu.classList.remove('active');
+            mobileMenuOverlay.classList.remove('active');
+        }
+    });
 }
 
 // --- Soumission d'une blague par un utilisateur ---

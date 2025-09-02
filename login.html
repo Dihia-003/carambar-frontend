@@ -13,6 +13,8 @@
         .login-btn{background:#FF6B35;color:#fff;border:none;padding:12px 16px;border-radius:12px;font-weight:700;cursor:pointer}
         .switch{font-size:.9rem;text-align:center;margin-top:6px}
         .msg{margin-top:8px;text-align:center;font-weight:700}
+        .remember-me{display:flex;align-items:center;gap:8px;margin:8px 0;font-size:.9rem}
+        .remember-me input[type="checkbox"]{width:16px;height:16px;cursor:pointer}
     </style>
     <script>
         const API_BASE_URL = 'https://carambar-api-lndl.onrender.com';
@@ -21,12 +23,25 @@
             const isRegister = document.getElementById('mode').value === 'register';
             const email = document.getElementById('email').value.trim();
             const password = document.getElementById('password').value.trim();
+            const rememberMe = document.getElementById('rememberMe').checked;
             const endpoint = isRegister ? '/api/auth/register' : '/api/auth/login';
             const res = await fetch(API_BASE_URL + endpoint,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,password})});
             const data = await res.json().catch(()=>({}));
             const msg = document.getElementById('msg');
             if(!res.ok){ msg.style.color='#e74c3c'; msg.textContent=data.message||'Erreur'; return; }
-            if(!isRegister){ localStorage.setItem('token', data.token); msg.style.color='#2ecc71'; msg.textContent='Connecté !'; setTimeout(()=>location.href='index.html?connected=1',600); }
+            if(!isRegister){ 
+                // Stocker le token selon l'option "Se souvenir de moi"
+                if(rememberMe) {
+                    localStorage.setItem('token', data.token);
+                    localStorage.setItem('rememberMe', 'true');
+                } else {
+                    sessionStorage.setItem('token', data.token);
+                    localStorage.removeItem('rememberMe');
+                }
+                msg.style.color='#2ecc71'; 
+                msg.textContent='Connecté !'; 
+                setTimeout(()=>location.href='index.html?connected=1',600); 
+            }
             else { msg.style.color='#2ecc71'; msg.textContent='Inscription réussie, connectez-vous.'; toggleMode(); }
         }
         function toggleMode(){
@@ -34,18 +49,82 @@
             const title = document.getElementById('title');
             const submit = document.getElementById('submit');
             const switchText = document.getElementById('switch-text');
+            const rememberMeDiv = document.getElementById('rememberMeDiv');
             const isRegister = mode.value === 'register';
-            if(isRegister){ mode.value='login'; title.textContent='Connexion'; submit.textContent='Se connecter'; switchText.innerHTML="Pas de compte ? <a href='#' onclick='toggleMode()'>Créer un compte</a>"; }
-            else { mode.value='register'; title.textContent='Inscription'; submit.textContent="S'inscrire"; switchText.innerHTML="Déjà un compte ? <a href='#' onclick='toggleMode()'>Se connecter</a>"; }
+            if(isRegister){ 
+                mode.value='login'; 
+                title.textContent='Connexion'; 
+                submit.textContent='Se connecter'; 
+                switchText.innerHTML="Pas de compte ? <a href='#' onclick='toggleMode()'>Créer un compte</a>"; 
+                rememberMeDiv.style.display='flex';
+            }
+            else { 
+                mode.value='register'; 
+                title.textContent='Inscription'; 
+                submit.textContent="S'inscrire"; 
+                switchText.innerHTML="Déjà un compte ? <a href='#' onclick='toggleMode()'>Se connecter</a>"; 
+                rememberMeDiv.style.display='none';
+            }
             document.getElementById('msg').textContent='';
         }
-        document.addEventListener('DOMContentLoaded',()=>{ toggleMode(); });
+        // Initialisation du menu burger
+        function initBurgerMenu() {
+            const burgerMenu = document.getElementById('burgerMenu');
+            const mobileMenu = document.getElementById('mobileMenu');
+            const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
+            
+            if (!burgerMenu || !mobileMenu || !mobileMenuOverlay) return;
+            
+            // Toggle du menu
+            burgerMenu.addEventListener('click', () => {
+                burgerMenu.classList.toggle('active');
+                mobileMenu.classList.toggle('active');
+                mobileMenuOverlay.classList.toggle('active');
+            });
+            
+            // Fermer le menu en cliquant sur l'overlay
+            mobileMenuOverlay.addEventListener('click', () => {
+                burgerMenu.classList.remove('active');
+                mobileMenu.classList.remove('active');
+                mobileMenuOverlay.classList.remove('active');
+            });
+            
+            // Fermer le menu en cliquant sur un lien
+            mobileMenu.addEventListener('click', (e) => {
+                if (e.target.classList.contains('mobile-link')) {
+                    burgerMenu.classList.remove('active');
+                    mobileMenu.classList.remove('active');
+                    mobileMenuOverlay.classList.remove('active');
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded',()=>{ 
+            toggleMode(); 
+            // Restaurer l'état de "Se souvenir de moi" si l'utilisateur était connecté
+            const rememberMe = localStorage.getItem('rememberMe');
+            if(rememberMe === 'true') {
+                document.getElementById('rememberMe').checked = true;
+            }
+            // Initialiser le menu burger
+            initBurgerMenu();
+        });
     </script>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="container">
         <header class="header">
+            <div class="top-links">
+                <a class="top-link" href="index.html">🏠 Accueil</a>
+            </div>
+            <button id="burgerMenu" class="burger-menu">
+                <div class="burger-icon">
+                    <div class="burger-line"></div>
+                    <div class="burger-line"></div>
+                    <div class="burger-line"></div>
+                </div>
+            </button>
             <div class="logo"><span class="logo-icon">🍬</span><h1 class="logo-text">Carambar & Co</h1></div>
             <p class="tagline">Connexion / Inscription</p>
         </header>
@@ -54,11 +133,21 @@
             <form onsubmit="handleAuth(event)">
                 <input id="email" type="email" placeholder="Email" required>
                 <input id="password" type="password" placeholder="Mot de passe (8+ avec chiffre)" required>
+                <div id="rememberMeDiv" class="remember-me">
+                    <input id="rememberMe" type="checkbox">
+                    <label for="rememberMe">Se souvenir de moi</label>
+                </div>
                 <input id="mode" type="hidden" value="register">
                 <button id="submit" class="login-btn" type="submit">Se connecter</button>
                 <div id="switch-text" class="switch"></div>
                 <div id="msg" class="msg"></div>
             </form>
+        </div>
+        
+        <!-- Menu mobile -->
+        <div id="mobileMenuOverlay" class="mobile-menu-overlay"></div>
+        <div id="mobileMenu" class="mobile-menu">
+            <a href="index.html" class="mobile-link">🏠 Accueil</a>
         </div>
     </div>
 </body>

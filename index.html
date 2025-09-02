@@ -21,6 +21,15 @@
                 <a class="top-link" href="login.html">🔑 Se connecter</a>
                 <a class="top-link" href="admin.html">🔧 Administration</a>
             </div>
+            
+            <!-- Menu Burger -->
+            <button class="burger-menu" id="burgerMenu">
+                <div class="burger-icon">
+                    <div class="burger-line"></div>
+                    <div class="burger-line"></div>
+                    <div class="burger-line"></div>
+                </div>
+            </button>
             <div class="logo">
                 <span class="logo-icon">🍬</span>
                 <h1 class="logo-text">Carambar & Co</h1>
@@ -133,6 +142,13 @@
 
     <!-- Conteneur pour l'effet des confettis. Il est en dehors du flux normal. -->
     <div id="confettiContainer" class="confetti-container"></div>
+    
+    <!-- Menu Mobile -->
+    <div class="mobile-menu-overlay" id="mobileMenuOverlay"></div>
+    <div class="mobile-menu" id="mobileMenu">
+        <a href="login.html" class="mobile-link">🔑 Se connecter</a>
+        <a href="admin.html" class="mobile-link">🔧 Administration</a>
+    </div>
 
     <!-- On charge notre fichier JavaScript à la toute fin du body. -->
     <!-- C'est la meilleure pratique pour s'assurer que tout le HTML est disponible quand le script s'exécute. -->

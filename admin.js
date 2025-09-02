@@ -9,6 +9,7 @@ const loginError = document.getElementById('loginError');
 const successMessage = document.getElementById('successMessage');
 const errorMessage = document.getElementById('errorMessage');
 const jokesList = document.getElementById('jokesList');
+const adminLogoutButton = document.getElementById('adminLogoutButton');
 
 // --- Fonction de connexion (très simple) ---
 function login() {
@@ -20,6 +21,11 @@ function login() {
         loginSection.style.display = 'none';
         adminSection.style.display = 'block';
         loginError.style.display = 'none';
+        
+        // Afficher le bouton de déconnexion dans la navbar
+        if (adminLogoutButton) {
+            adminLogoutButton.style.display = 'inline-block';
+        }
         
         // Stockage simple en sessionStorage
         sessionStorage.setItem('isAdmin', 'true');
@@ -40,6 +46,11 @@ function logout() {
     // Retour à la page de connexion
     loginSection.style.display = 'block';
     adminSection.style.display = 'none';
+    
+    // Cacher le bouton de déconnexion dans la navbar
+    if (adminLogoutButton) {
+        adminLogoutButton.style.display = 'none';
+    }
     
     // Nettoyage du formulaire
     document.getElementById('blagueForm').reset();
@@ -135,10 +146,30 @@ function showError(message) {
 document.addEventListener('DOMContentLoaded', () => {
     console.log('🍬 Page admin chargée');
     
+    // Attacher l'événement de déconnexion au bouton de la navbar
+    if (adminLogoutButton) {
+        adminLogoutButton.addEventListener('click', logout);
+    }
+    
+    // Initialisation du menu burger
+    initBurgerMenu();
+    
     // Vérifier si l'admin est déjà connecté
     if (sessionStorage.getItem('isAdmin') === 'true') {
         loginSection.style.display = 'none';
         adminSection.style.display = 'block';
+        
+        // Afficher le bouton de déconnexion dans la navbar
+        if (adminLogoutButton) {
+            adminLogoutButton.style.display = 'inline-block';
+        }
+        
+        // Afficher le bouton de déconnexion dans le menu mobile
+        const mobileLogoutButton = document.getElementById('mobileLogoutButton');
+        if (mobileLogoutButton) {
+            mobileLogoutButton.style.display = 'block';
+        }
+        
         console.log('✅ Session admin active');
     }
 });
@@ -190,6 +221,50 @@ async function deleteJoke(id) {
     } catch (e) {
         console.error(e);
         alert('Erreur pendant la suppression');
+    }
+}
+
+// --- Gestion du menu burger ---
+function initBurgerMenu() {
+    const burgerMenu = document.getElementById('burgerMenu');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
+    const mobileLogoutButton = document.getElementById('mobileLogoutButton');
+    
+    if (!burgerMenu || !mobileMenu || !mobileMenuOverlay) return;
+    
+    // Toggle du menu
+    burgerMenu.addEventListener('click', () => {
+        burgerMenu.classList.toggle('active');
+        mobileMenu.classList.toggle('active');
+        mobileMenuOverlay.classList.toggle('active');
+    });
+    
+    // Fermer le menu en cliquant sur l'overlay
+    mobileMenuOverlay.addEventListener('click', () => {
+        burgerMenu.classList.remove('active');
+        mobileMenu.classList.remove('active');
+        mobileMenuOverlay.classList.remove('active');
+    });
+    
+    // Fermer le menu en cliquant sur un lien
+    const mobileLinks = mobileMenu.querySelectorAll('.mobile-link');
+    mobileLinks.forEach(link => {
+        link.addEventListener('click', () => {
+            burgerMenu.classList.remove('active');
+            mobileMenu.classList.remove('active');
+            mobileMenuOverlay.classList.remove('active');
+        });
+    });
+    
+    // Gérer le bouton de déconnexion mobile
+    if (mobileLogoutButton) {
+        mobileLogoutButton.addEventListener('click', () => {
+            logout();
+            burgerMenu.classList.remove('active');
+            mobileMenu.classList.remove('active');
+            mobileMenuOverlay.classList.remove('active');
+        });
     }
 }
 
